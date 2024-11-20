@@ -4,6 +4,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use server"
 
+const pgClient = new pg.Client({
+  connectionString: env.NEYNAR_DB_URL,
+})
+const connectPromise = pgClient.connect()
+
+async function getClient() {
+  await connectPromise
+  return pgClient
+}
+
 import pg from 'pg'
 import { env } from '~/env';
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
@@ -13,10 +23,7 @@ export async function anonFeed(from?: Date) {
 }
 
 async function fetchRecentAnonCasts(from?: Date) {
-  const pgClient = new pg.Client({
-    connectionString: env.NEYNAR_DB_URL,
-  })
-  await pgClient.connect()
+  const pgClient = await getClient()
   const neynar = new NeynarAPIClient(env.NEYNAR_API_KEY);
 
   const timestampClause = from ? `AND timestamp < '${from.toISOString()}'` : '';
