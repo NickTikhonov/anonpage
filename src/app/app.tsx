@@ -6,7 +6,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { anonFeed } from "./server";
-import { type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import { EmbedCast, EmbedUrl, type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
@@ -205,18 +205,27 @@ export function App() {
               <div className="w-full">
                 <div className="w-full">
                   {cast.text && (
-                    <p style={{ color: "white", lineHeight: "1.2" }}>{cleanText(cast.text)}</p>
+                    <p className="text-white leading-tight">{cleanText(cast.text)}</p>
                   )}
-                  {cast.embeds.map((embed, index) => {
-                    const imageUrl = (embed as any).url as string
-                    return (
-                      <img
-                        key={index}
-                        src={imageUrl}
-                        alt=""
-                        style={{ maxWidth: "100%", marginTop: "5px", marginBottom: "5px" }}
-                      />
-                    );
+                  {cast.embeds.map((embed, i) => {
+                    if (embed.hasOwnProperty('cast')) {
+                      const c = (embed as EmbedCast).cast;
+                      return <div className="px-4 py-2 border border-white/20 rounded mt-2" key={i}>{c.text}</div>
+                    } else {
+                      const c = (embed as EmbedUrl)
+                      if (c.metadata?.image) {
+                        return (
+                          <img
+                            key={i}
+                            src={c.url}
+                            alt=""
+                            className="max-w-[600px] w-full mt-4 mb-1"
+                          />
+                        );
+                      } else {
+                        return null
+                      }
+                    }
                   })}
                 </div>
                 <div className="w-full flex items-center gap-2 text-gray-500 text-sm mt-2">
