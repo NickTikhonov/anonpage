@@ -20,22 +20,22 @@ async function fetchRecentAnonCasts() {
   const neynar = new NeynarAPIClient(env.NEYNAR_API_KEY);
 
   // Execute the query (example using node-postgres)
-//   const result = await pgClient.query(
-//     `
-// SELECT '0x' || encode(hash, 'hex') as hash
-// FROM "public"."casts"
-// WHERE fid IN (880094, 862100, 193315)
-// AND parent_hash is NULL
-// ORDER BY timestamp DESC
-// LIMIT 20;`
-//   );
-
   const result = await pgClient.query(
-    `SELECT '0x' || encode(hash, 'hex') as hash
-    FROM "public"."casts"
-    ORDER BY timestamp DESC
-    LIMIT 20;`
+    `
+SELECT '0x' || encode(hash, 'hex') as hash
+FROM "public"."casts"
+WHERE fid IN (880094, 862100, 193315)
+AND parent_hash is NULL
+ORDER BY timestamp DESC
+LIMIT 20;`
   );
+
+  // const result = await pgClient.query(
+  //   `SELECT '0x' || encode(hash, 'hex') as hash
+  //   FROM "public"."casts"
+  //   ORDER BY timestamp DESC
+  //   LIMIT 20;`
+  // );
 
   const hashes = result.rows.map(r => r.hash) as string[]
   console.log(`Fetching ${hashes.length} casts.`)

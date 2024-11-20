@@ -74,7 +74,7 @@ export function App() {
       </nav>
       {anonCasts.length === 0 && (
         <div className="text-white text-center">
-          <p>Loading...</p>
+          <p>Doing initial load... (may take a few secs.)</p>
         </div>
       )}
       <motion.div className="w-full h-full">
