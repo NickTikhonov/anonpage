@@ -25,24 +25,38 @@ function cleanText(text: string) {
 export function App() {
   const [anonCasts, setAnonCasts] = useState<CastWithInteractions[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  function merge(casts: CastWithInteractions[], newCasts: CastWithInteractions[]) {
+    const newCastsHashes = newCasts.map(cast => cast.hash);
+    const combined = casts.filter(cast => !newCastsHashes.includes(cast.hash)).concat(newCasts);
+    const sortedRecentFirst = combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return sortedRecentFirst;
+  }
+
+  const onLoadMore = async () => {
+    setLoadingMore(true)
+    if (anonCasts.length === 0) {
+      return;
+    }
+    const lastCast = anonCasts[anonCasts.length - 1]!;
+    const casts = await anonFeed(new Date(lastCast.timestamp));
+    setAnonCasts((lastValue) => merge(lastValue, casts));
+    setLoadingMore(false)
+  }
 
   useEffect(() => {
-    void (async () => {
-      console.log("Updating feed.")
+    const updateFeed = async () => {
+      console.log("Updating feed.");
       setRefreshing(true);
       const casts = await anonFeed();
       setRefreshing(false);
-      setAnonCasts(casts);
-    })();
+      setAnonCasts((lastValue) => merge(lastValue, casts));
+    };
 
+    void updateFeed();
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const interval = setInterval(async () => {
-      console.log("Updating feed.")
-      setRefreshing(true);
-      const casts = await anonFeed();
-      setRefreshing(false);
-      setAnonCasts(casts);
-    }, 5000);
+    const interval = setInterval(updateFeed, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -164,6 +178,9 @@ export function App() {
             </div>
           </motion.a>
         ))}
+        <Button onClick={onLoadMore} size="lg" className="w-full" disabled={loadingMore}>
+          Load More
+        </Button>
       </motion.div>
       {/* <a href="https://www.activism.net/cypherpunk/manifesto.html">
         <marquee className="text-white text-sm" behavior="scroll" direction="left" scrollamount="5">
