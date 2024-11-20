@@ -4,7 +4,7 @@
 
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { anonFeed } from "./server";
 import { type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
@@ -220,18 +220,9 @@ export function App() {
                   })}
                 </div>
                 <div className="w-full flex items-center gap-2 text-gray-500 text-sm mt-2">
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <LucideHeart size={16} />
-                    <span>{cast.reactions.likes_count}</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <LucideRotateCcw size={16} />
-                    <span>{cast.reactions.recasts_count}</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <LucideMessageCircle size={16} />
-                    <span>{cast.replies.count}</span>
-                  </div>
+                  <ReactionStat icon={<LucideHeart size={16} />} count={cast.reactions.likes_count} id={cast.hash} />
+                  <ReactionStat icon={<LucideRotateCcw size={16} />} count={cast.reactions.recasts_count} id={cast.hash} />
+                  <ReactionStat icon={<LucideMessageCircle size={16} />} count={cast.replies.count} id={cast.hash} />
                   <span className="flex-grow"></span>
                   <span>{cast.author.username}</span>
                   <span> - {new Date(cast.timestamp).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: 'numeric' })}</span>
@@ -252,3 +243,33 @@ export function App() {
     </div>
   );
 }
+
+const ReactionStat = ({ icon: Icon, count, id }: { icon: React.ReactNode, count: number, id: string }) => {
+  const prevCount = useRef(count);
+  const prevId = useRef(id);
+
+  const shouldAnimate = prevCount.current !== count && prevId.current === id;
+
+  useEffect(() => {
+    prevCount.current = count;
+    prevId.current = id;
+  }, [count, id]);
+
+  return (
+    <motion.div
+      style={{ display: "flex", alignItems: "center", gap: "4px" }}
+      animate={{ scale: shouldAnimate ? 1.2 : 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      <motion.div
+        animate={shouldAnimate ? { rotate: 360 } : { rotate: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {Icon}
+      </motion.div>
+      <span>{count}</span>
+    </motion.div>
+  );
+};
+
+
