@@ -11,6 +11,7 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
 import { LucideHeart, LucideMessageCircle, LucideRotateCcw } from "lucide-react";
+import { set } from "zod";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -23,12 +24,23 @@ function cleanText(text: string) {
 
 export function App() {
   const [anonCasts, setAnonCasts] = useState<CastWithInteractions[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    void (async () => {
+      console.log("Updating feed.")
+      setRefreshing(true);
+      const casts = await anonFeed();
+      setRefreshing(false);
+      setAnonCasts(casts);
+    })();
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const interval = setInterval(async () => {
       console.log("Updating feed.")
+      setRefreshing(true);
       const casts = await anonFeed();
+      setRefreshing(false);
       setAnonCasts(casts);
     }, 5000);
 
@@ -53,9 +65,13 @@ export function App() {
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm">
+            {refreshing ? 
+            (<Button size="sm" disabled>
+              Refreshing...
+              </Button>) :
+            (<Button size="sm">
               Cast Anonymously
-            </Button>
+            </Button>)}
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
