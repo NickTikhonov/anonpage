@@ -10,6 +10,7 @@ import { type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
+import { LucideHeart, LucideMessageCircle, LucideRotateCcw } from "lucide-react";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -109,8 +110,8 @@ export function App() {
                 alt=""
                 style={{ width: "32px", height: "32px", borderRadius: "50%" }}
               />
-              <div>
-                <div>
+              <div className="w-full">
+                <div className="w-full">
                   {cast.text && (
                     <p style={{ color: "white", lineHeight: "1.2" }}>{cleanText(cast.text)}</p>
                   )}
@@ -126,9 +127,22 @@ export function App() {
                     );
                   })}
                 </div>
-                <div style={{ color: "gray", fontSize: "12px" }}>
-                  <span>casted by {cast.author.username}</span>
-                  <span> - {new Date(cast.timestamp).toLocaleString()}</span>
+                <div className="w-full flex items-center gap-2 text-gray-500 text-sm mt-2">
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <LucideHeart size={16} />
+                    <span>{cast.reactions.likes_count}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <LucideRotateCcw size={16} />
+                    <span>{cast.reactions.recasts_count}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <LucideMessageCircle size={16} />
+                    <span>{cast.replies.count}</span>
+                  </div>
+                  <span className="flex-grow"></span>
+                  <span>{cast.author.username}</span>
+                  <span> - {new Date(cast.timestamp).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: 'numeric' })}</span>
                 </div>
               </div>
             </div>
