@@ -23,7 +23,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${firaCode.variable}`}>
+    <html lang="en" className={`${firaCode.variable} dark`}>
       {/* <NeynarContext> */}
         <body>{children}</body>
       {/* </NeynarContext> */}

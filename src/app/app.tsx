@@ -83,7 +83,7 @@ export function App() {
             (<Button size="sm" disabled>
               Refreshing...
               </Button>) :
-            (<Button size="sm">
+            (<Button size="sm" className="bg-slate-900 text-white hover:bg-slate-500">
               Cast Anonymously
             </Button>)}
           </DialogTrigger>
@@ -103,10 +103,72 @@ export function App() {
           </DialogContent>
         </Dialog>
       </nav>
+      <p className="py-5">
+        anon.page aggregates all Farcaster posts from anon accounts the platform. 
+        the live feed refreshes every 5 seconds with the latest content from anonymous users.
+      </p>
       {anonCasts.length === 0 && (
-        <div className="text-white text-center">
-          <p>Doing initial load... (may take a few secs.)</p>
-        </div>
+        <motion.div
+          className="text-white text-center p-10"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.5,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <div className="flex justify-center gap-4">
+            <motion.div
+              className="text-4xl"
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.5, 1],
+                opacity: [0.25, 1, 0.25],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+                times: [0, 0.5, 1],
+                repeat: Infinity,
+              }}
+            >
+              ?
+            </motion.div>
+            <motion.div
+              className="text-4xl"
+              animate={{
+                rotate: [360, 0],
+                scale: [1, 1.5, 1],
+                opacity: [0.25, 1, 0.25],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+                times: [0, 0.5, 1],
+                repeat: Infinity,
+              }}
+            >
+              ?
+            </motion.div>
+            <motion.div
+              className="text-4xl"
+              animate={{
+                rotate: [0, -360],
+                scale: [1, 1.5, 1],
+                opacity: [0.25, 1, 0.25],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+                times: [0, 0.5, 1],
+                repeat: Infinity,
+              }}
+            >
+              ?
+            </motion.div>
+          </div>
+        </motion.div>
       )}
       <motion.div className="w-full h-full">
         {anonCasts.map((cast) => (
@@ -178,7 +240,7 @@ export function App() {
             </div>
           </motion.a>
         ))}
-        <Button onClick={onLoadMore} size="lg" className="w-full" disabled={loadingMore}>
+        <Button onClick={onLoadMore} size="lg" className="w-full" disabled={loadingMore || refreshing}>
           Load More
         </Button>
       </motion.div>
