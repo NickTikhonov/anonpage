@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
+
 "use client"
 
 import { useEffect, useState } from "react";
 import { anonFeed } from "./server";
 import { type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -103,10 +107,11 @@ export function App() {
                   <p style={{ color: "white", lineHeight: "1.2" }}>{cleanText(cast.text)}</p>
                 )}
                 {cast.embeds.map((embed, index) => {
+                  const imageUrl = (embed as any).url as string
                   return (
                     <img
                       key={index}
-                      src={embed.url}
+                      src={imageUrl}
                       alt=""
                       style={{ maxWidth: "100%", marginTop: "5px", marginBottom: "5px" }}
                     />
@@ -121,11 +126,11 @@ export function App() {
           </div>
         </a>
       ))}
-      <a href="https://www.activism.net/cypherpunk/manifesto.html">
+      {/* <a href="https://www.activism.net/cypherpunk/manifesto.html">
         <marquee className="text-white text-sm" behavior="scroll" direction="left" scrollamount="5">
           Privacy is necessary for an open society in the electronic age. Privacy is not secrecy. A private matter is something one doesn't want the whole world to know, but a secret matter is something one doesn't want anybody to know. Privacy is the power to selectively reveal oneself to the world.
         </marquee>
-      </a>
+      </a> */}
     </div>
   );
 }

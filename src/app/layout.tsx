@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import "~/styles/globals.css";
 
-import { Fira_Code } from "@next/font/google";
+import { Fira_Code } from "next/font/google";
 import { type Metadata } from "next";
 
 const firaCode = Fira_Code({

@@ -16,7 +16,6 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
   "dependencies": {
-    "@next/font": "^14.2.15",
     "@neynar/nodejs-sdk": "^1.71.0",
     "@neynar/react": "^0.9.7",
     "@radix-ui/react-dialog": "^1.1.2",
