@@ -9,6 +9,7 @@ import { anonFeed } from "./server";
 import { type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import { motion } from 'framer-motion';
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -76,56 +77,64 @@ export function App() {
           <p>Loading...</p>
         </div>
       )}
-      {anonCasts.map((cast, index) => (
-        <a
-          key={cast.hash}
-          href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
-          target="_blank"
-          rel="noreferrer"
-          style={{ textDecoration: "none" }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "8px",
-              backgroundColor: "black",
-              padding: "10px",
-              borderRadius: "5px",
-              marginBottom: "10px",
-              boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+      <motion.div className="w-full h-full">
+        {anonCasts.map((cast) => (
+          <motion.a
+            key={cast.hash}
+            href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
+            target="_blank"
+            rel="noreferrer"
+            initial={{ opacity: 0, rotate: -5 }}
+            animate={{ opacity: 1, rotate: 5 }}
+            transition={{
+              duration: 0.05,
+              repeat: 4,
+              repeatType: "reverse",
             }}
           >
-            <img
-              src={cast.author.pfp_url}
-              alt=""
-              style={{ width: "32px", height: "32px", borderRadius: "50%" }}
-            />
-            <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "8px",
+                backgroundColor: "black",
+                padding: "10px",
+                borderRadius: "5px",
+                marginBottom: "10px",
+                boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <img
+                src={cast.author.pfp_url}
+                alt=""
+                style={{ width: "32px", height: "32px", borderRadius: "50%" }}
+              />
               <div>
-                {cast.text && (
-                  <p style={{ color: "white", lineHeight: "1.2" }}>{cleanText(cast.text)}</p>
-                )}
-                {cast.embeds.map((embed, index) => {
-                  const imageUrl = (embed as any).url as string
-                  return (
-                    <img
-                      key={index}
-                      src={imageUrl}
-                      alt=""
-                      style={{ maxWidth: "100%", marginTop: "5px", marginBottom: "5px" }}
-                    />
-                  );
-                })}
-              </div>
-              <div style={{ color: "gray", fontSize: "12px" }}>
-                <span>casted by {cast.author.username}</span>
-                <span> - {new Date(cast.timestamp).toLocaleString()}</span>
+                <div>
+                  {cast.text && (
+                    <p style={{ color: "white", lineHeight: "1.2" }}>{cleanText(cast.text)}</p>
+                  )}
+                  {cast.embeds.map((embed, index) => {
+                    const imageUrl = (embed as any).url as string
+                    return (
+                      <img
+                        key={index}
+                        src={imageUrl}
+                        alt=""
+                        style={{ maxWidth: "100%", marginTop: "5px", marginBottom: "5px" }}
+                      />
+                    );
+                  })}
+                </div>
+                <div style={{ color: "gray", fontSize: "12px" }}>
+                  <span>casted by {cast.author.username}</span>
+                  <span> - {new Date(cast.timestamp).toLocaleString()}</span>
+                </div>
               </div>
             </div>
-          </div>
-        </a>
-      ))}
+          </motion.a>
+        ))}
+      </motion.div>
       {/* <a href="https://www.activism.net/cypherpunk/manifesto.html">
         <marquee className="text-white text-sm" behavior="scroll" direction="left" scrollamount="5">
           Privacy is necessary for an open society in the electronic age. Privacy is not secrecy. A private matter is something one doesn't want the whole world to know, but a secret matter is something one doesn't want anybody to know. Privacy is the power to selectively reveal oneself to the world.
