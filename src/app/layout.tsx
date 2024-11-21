@@ -5,7 +5,6 @@ import "~/styles/globals.css";
 
 import { Fira_Code } from "next/font/google";
 import { type Metadata } from "next";
-import { CSPostHogProvider } from "./analytics";
 
 const firaCode = Fira_Code({
   weight: "400",
@@ -24,9 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${firaCode.variable} dark`}>
-      <CSPostHogProvider>
-        <body>{children}</body>
-      </CSPostHogProvider>
+      <body>{children}</body>
     </html>
   );
 }

@@ -18,8 +18,6 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_POSTHOG_KEY: z.string(),
-    NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   },
 
   /**
@@ -30,8 +28,6 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEYNAR_DB_URL: process.env.NEYNAR_DB_URL,
     NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
-    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
