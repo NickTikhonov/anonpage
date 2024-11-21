@@ -6,12 +6,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { anonFeed } from "./server";
-import { EmbedCast, EmbedUrl, type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import { type EmbedCast, type EmbedUrl, type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
 import { LucideHeart, LucideMessageCircle, LucideRotateCcw } from "lucide-react";
-import { set } from "zod";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {

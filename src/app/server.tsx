@@ -4,14 +4,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use server"
 
-const pgClient = new pg.Client({
+// Create a connection pool
+const pool = new pg.Pool({
   connectionString: env.NEYNAR_DB_URL,
-})
-const connectPromise = pgClient.connect()
+  max: 20, // Set the maximum number of clients in the pool
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if no client is available
+});
 
 async function getClient() {
-  await connectPromise
-  return pgClient
+  return await pool.connect();
 }
 
 import pg from 'pg'
