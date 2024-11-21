@@ -264,7 +264,8 @@ function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: b
         borderRadius: "5px",
         marginBottom: "10px",
         boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
-      }: {}}>
+        width: "100%",
+      }: { width: "100%"}} className="w-full">
         {parent && (
           <AnonCast cast={parent} isParent />
         )}
@@ -277,6 +278,7 @@ function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: b
             flexDirection: "row",
             gap: "8px",
           }}
+          className="w-full"
         >
           {parent && (
             <Reply size={24} style={{ transform: "rotate(180deg)" }} className="flex-none" />
@@ -297,6 +299,7 @@ function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: b
             href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
             target="_blank"
             rel="noreferrer"
+            className="w-full"
           >
             <div className="w-full">
               <div className="w-full">
