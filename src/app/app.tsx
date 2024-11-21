@@ -56,7 +56,7 @@ export function App() {
 
     void updateFeed();
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const interval = setInterval(updateFeed, 5000);
+    const interval = setInterval(updateFeed, 15000);
 
     return () => clearInterval(interval);
   }, []);
