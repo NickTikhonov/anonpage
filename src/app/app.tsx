@@ -103,7 +103,7 @@ export function App() {
         </Dialog>
       </nav>
       <p className="py-5">
-        anon.page: the anonymous feed. A window into the unfiltered stream of human consciousness, refreshing every 10 seconds.
+        anon.page: the anonymous Farcaster feed. A window into the unfiltered stream of human consciousness, refreshing every 10 seconds.
       </p>
       {anonCasts.length === 0 && (
         <motion.div
