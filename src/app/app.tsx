@@ -85,9 +85,7 @@ function Nav({ refreshing }: { refreshing: boolean }) {
   return (
     <nav className="flex items-center gap-4 mb-2 text-white font-bold text-2xl">
       <div className="flex-grow flex flex-row gap-2 items-center">
-        <div className="w-10 h-10 grid place-items-center text-xl bg-black">
-          ?
-        </div>
+        <Logo />
         <div className="flex-col">
           <h1 className="text-xl">
             anon.page
@@ -99,6 +97,34 @@ function Nav({ refreshing }: { refreshing: boolean }) {
       </div>
       <CastButtonDialog refreshing={refreshing} />
     </nav>
+  )
+}
+
+function Logo() {
+  return (
+    <div className="w-12 h-12 rounded grid place-items-center text-3xl bg-black">
+      <motion.div
+        animate={{ rotateX: [-40, 40], rotateY: [-40, 40] }}
+        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+        className="relative"
+      >
+        <motion.div
+          animate={{ rotateX: [40, -40], rotateY: [40, -40], x: [-2, 2], y: [-2, 2] }}
+          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          className="absolute inset-0 text-red-500/30"
+        >
+          ?
+        </motion.div>
+        <motion.div
+          animate={{ rotateX: [-40, 40], rotateY: [-40, 40], x: [2, -2], y: [2, -2] }}
+          transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+          className="absolute inset-0 text-green-500/30"
+        >
+          ?
+        </motion.div>
+        <div>?</div>
+      </motion.div>
+    </div>
   )
 }
 
