@@ -11,7 +11,6 @@ const firaCode = Fira_Code({
   subsets: ["latin"],
   variable: "--font-fira-code",
 });
-// import { NeynarContext } from "./neynar_context";
 
 export const metadata: Metadata = {
   title: "anon.page",
@@ -24,9 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${firaCode.variable} dark`}>
-      {/* <NeynarContext> */}
-        <body>{children}</body>
-      {/* </NeynarContext> */}
+      <body>{children}</body>
     </html>
   );
 }
