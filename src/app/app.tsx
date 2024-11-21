@@ -11,6 +11,7 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
 import { LucideHeart, LucideMessageCircle, LucideRotateCcw, MessageSquareReply, Reply } from "lucide-react";
+import posthog from "posthog-js";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -34,6 +35,7 @@ export function App() {
   }
 
   const onLoadMore = async () => {
+    posthog.capture('load more anon casts')
     setLoadingMore(true)
     if (anonCasts.length === 0) {
       return;
