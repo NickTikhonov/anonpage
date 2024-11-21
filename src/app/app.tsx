@@ -103,8 +103,7 @@ export function App() {
         </Dialog>
       </nav>
       <p className="py-5">
-        anon.page aggregates all Farcaster posts from anon accounts the platform. 
-        the live feed refreshes every 5 seconds with the latest content from anonymous users.
+        anon.page: the anonymous feed. A window into the unfiltered stream of human consciousness, refreshing every 10 seconds.
       </p>
       {anonCasts.length === 0 && (
         <motion.div
