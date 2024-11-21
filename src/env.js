@@ -18,7 +18,6 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_NEYNAR_CLIENT_ID: z.string()
   },
 
   /**
@@ -27,7 +26,6 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_NEYNAR_CLIENT_ID: process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID,
     NEYNAR_DB_URL: process.env.NEYNAR_DB_URL,
     NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
   },
