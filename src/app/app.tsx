@@ -14,8 +14,8 @@ import { LucideHeart, LucideMessageCircle, LucideRotateCcw, MessageSquareReply, 
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
-    if (word.length > 20) {
-      return word.slice(0, 20) + "...";
+    if (word.length > 15) {
+      return word.slice(0, 15) + "...";
     }
     return word;
   }).join(" ");
