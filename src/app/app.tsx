@@ -253,6 +253,7 @@ function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: b
         repeat: 4,
         repeatType: "reverse",
       }}
+      className="w-full"
     >
       <div style={!isParent ? {
         display: "flex",
