@@ -5,12 +5,12 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import { anonFeed } from "./server";
+import { anonFeed, fetchParentCast } from "./server";
 import { type EmbedCast, type EmbedUrl, type CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { motion } from 'framer-motion';
-import { LucideHeart, LucideMessageCircle, LucideRotateCcw } from "lucide-react";
+import { LucideHeart, LucideMessageCircle, LucideRotateCcw, MessageSquareReply, Reply } from "lucide-react";
 
 function cleanText(text: string) {
   return text.split(" ").map((word) => {
@@ -226,73 +226,114 @@ function Loader() {
   )
 }
 
-function AnonCast({ cast }: { cast: CastWithInteractions }) {
+function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: boolean }) {
+  const [parent, setParent] = useState<CastWithInteractions | null>(null);
+
+  async function fetchParent(cast: CastWithInteractions) {
+    if (!cast.parent_hash) {
+      return
+    }
+    const parent = await fetchParentCast(cast.parent_hash)
+    if (parent) {
+      setParent(parent)
+    }
+  }
+
+  useEffect(() => {
+    if (isParent) return
+    void fetchParent(cast)
+  }, [cast, isParent])
+
   return (
-    <motion.a
-      href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
-      target="_blank"
-      rel="noreferrer"
-      initial={{ opacity: 0, rotate: -5 }}
-      animate={{ opacity: 1, rotate: 5 }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{
         duration: 0.05,
         repeat: 4,
         repeatType: "reverse",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "8px",
-          backgroundColor: "black",
-          padding: "10px",
-          borderRadius: "5px",
-          marginBottom: "10px",
-          boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
-        }}
-      >
-        <img
-          src={cast.author.pfp_url}
-          alt=""
-          style={{ width: "32px", height: "32px", borderRadius: "50%" }}
-        />
-        <div className="w-full">
-          <div className="w-full">
-            {cast.text && (
-              <p className="text-white leading-tight">{cleanText(cast.text)}</p>
-            )}
-            {cast.embeds.map((embed, i) => {
-              if (embed.hasOwnProperty('cast')) {
-                const c = (embed as EmbedCast).cast;
-                return <div className="px-4 py-2 border border-white/20 rounded mt-2" key={i}>{c.text}</div>
-              } else {
-                const c = (embed as EmbedUrl)
-                if (c.metadata?.image) {
-                  return (
-                    <img
-                      key={i}
-                      src={c.url}
-                      alt=""
-                      className="max-w-[600px] w-full mt-4 mb-1"
-                    />
-                  );
-                } else {
-                  return null
-                }
-              }
-            })}
-          </div>
-          <div className="w-full flex items-center gap-2 text-gray-500 text-sm mt-2">
-            <ReactionStat icon={<LucideHeart size={16} />} count={cast.reactions.likes_count} id={cast.hash} />
-            <ReactionStat icon={<LucideRotateCcw size={16} />} count={cast.reactions.recasts_count} id={cast.hash} />
-            <ReactionStat icon={<LucideMessageCircle size={16} />} count={cast.replies.count} id={cast.hash} />
-            <span className="flex-grow"></span>
-            <span>{cast.author.username}</span>
-            <span> - {new Date(cast.timestamp).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: 'numeric' })}</span>
-          </div>
+      <div style={!isParent ? {
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        backgroundColor: "black",
+        padding: "10px",
+        borderRadius: "5px",
+        marginBottom: "10px",
+        boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+      }: {}}>
+        {parent && (
+          <AnonCast cast={parent} isParent />
+        )}
+        {parent && (
+          <div className="h-2"/>
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "8px",
+          }}
+        >
+          {parent && (
+            <Reply size={24} style={{ transform: "rotate(180deg)" }} className="flex-none" />
+          )}
+          <a
+            href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-none"
+          >
+            <img
+              src={cast.author.pfp_url}
+              alt=""
+              className="w-8 h-8 rounded-full flex-none"
+            />
+          </a>
+          <a
+            href={`https://warpcast.com/${cast.author.username}/${cast.hash.slice(0, 10)}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="w-full">
+              <div className="w-full">
+                {cast.text && (
+                  <p className="text-white leading-tight">{cleanText(cast.text)}</p>
+                )}
+                {cast.embeds.map((embed, i) => {
+                  if (embed.hasOwnProperty('cast')) {
+                    const c = (embed as EmbedCast).cast;
+                    return <div className="px-4 py-2 border border-white/20 rounded mt-2" key={i}>{c.text}</div>
+                  } else {
+                    const c = (embed as EmbedUrl)
+                    if (c.metadata?.image) {
+                      return (
+                        <img
+                          key={i}
+                          src={c.url}
+                          alt=""
+                          className="max-w-[600px] w-full mt-4 mb-1"
+                        />
+                      );
+                    } else {
+                      return null
+                    }
+                  }
+                })}
+              </div>
+              <div className="w-full flex items-center gap-2 text-gray-500 text-sm mt-2">
+                <ReactionStat icon={<LucideHeart size={16} />} count={cast.reactions.likes_count} id={cast.hash} />
+                <ReactionStat icon={<LucideRotateCcw size={16} />} count={cast.reactions.recasts_count} id={cast.hash} />
+                <ReactionStat icon={<LucideMessageCircle size={16} />} count={cast.replies.count} id={cast.hash} />
+                <span className="flex-grow"></span>
+                <span>{new Date(cast.timestamp).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: 'numeric' })}</span>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   )
 }

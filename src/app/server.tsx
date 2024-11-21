@@ -21,6 +21,15 @@ export async function anonFeed(from?: Date) {
   return await fetchRecentAnonCasts(from)
 }
 
+export async function fetchParentCast(hash: string) {
+  const neynar = new NeynarAPIClient(env.NEYNAR_API_KEY);
+  const casts = await neynar.fetchBulkCasts([hash])
+  if (casts.result.casts.length === 0) {
+    return undefined
+  }
+  return casts.result.casts[0]
+}
+
 async function fetchRecentAnonCasts(from?: Date) {
   const pgClient = await getClient()
   const neynar = new NeynarAPIClient(env.NEYNAR_API_KEY);
@@ -33,7 +42,6 @@ async function fetchRecentAnonCasts(from?: Date) {
 SELECT '0x' || encode(hash, 'hex') as hash
 FROM "public"."casts"
 WHERE fid IN (880094, 862100, 193315)
-AND parent_hash is NULL
 ${timestampClause}
 ORDER BY timestamp DESC
 LIMIT 20;`
