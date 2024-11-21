@@ -64,7 +64,7 @@ export function App() {
     <div className="w-full min-h-screen bg-gradient-to-b from-slate-800 to-black p-2 lg:p-10">
       <Nav refreshing={refreshing} />
       <p className="py-2">
-        anon.page: the anonymous Farcaster feed. A window into the unfiltered stream of human consciousness, refreshing every 10 seconds.
+        anon.page: the anon cast aggregator. Refreshes every 15 seconds.
       </p>
       {anonCasts.length === 0 && (
         <Loader />
