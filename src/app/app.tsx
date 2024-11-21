@@ -61,22 +61,24 @@ export function App() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-800 to-black p-2 lg:p-10">
-      <Nav refreshing={refreshing} />
-      <p className="py-2">
-        anon.page: the anon cast aggregator. Refreshes every 15 seconds.
-      </p>
-      {anonCasts.length === 0 && (
-        <Loader />
-      )}
-      <motion.div className="w-full h-full">
-        {anonCasts.map((cast) => (
-          <AnonCast key={cast.hash} cast={cast} />
-        ))}
-        <Button onClick={onLoadMore} size="lg" className="w-full" disabled={loadingMore || refreshing}>
-          Load More
-        </Button>
-      </motion.div>
+    <div className="w-full flex justify-center min-h-screen bg-gradient-to-b from-slate-800 to-black p-2 lg:p-10">
+      <div className="w-full max-w-[850px]">
+        <Nav refreshing={refreshing} />
+        <p className="py-2">
+          anon.page: the anon cast aggregator. Refreshes every 15 seconds.
+        </p>
+        {anonCasts.length === 0 && (
+          <Loader />
+        )}
+        <motion.div className="w-full h-full">
+          {anonCasts.map((cast) => (
+            <AnonCast key={cast.hash} cast={cast} />
+          ))}
+          <Button onClick={onLoadMore} size="lg" className="w-full" disabled={loadingMore || refreshing}>
+            Load More
+          </Button>
+        </motion.div>
+      </div>
     </div>
   );
 }
