@@ -337,7 +337,7 @@ function AnonCast({ cast, isParent }: { cast: CastWithInteractions, isParent?: b
                 {cast.embeds.map((embed, i) => {
                   if (embed.hasOwnProperty('cast')) {
                     const c = (embed as EmbedCast).cast;
-                    return <div className="px-4 py-2 border border-white/20 rounded mt-2" key={i}>{c.text}</div>
+                    return <div className="px-4 py-2 border border-white/20 rounded mt-2" key={i}>{cleanText(c.text)}</div>
                   } else {
                     const c = (embed as EmbedUrl)
                     if (c.metadata?.image) {
