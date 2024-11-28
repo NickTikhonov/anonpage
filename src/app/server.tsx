@@ -70,7 +70,7 @@ async function fetchRecentAnonCasts(from?: Date) {
     `
 SELECT '0x' || encode(hash, 'hex') as hash
 FROM "public"."casts"
-WHERE fid IN (880094, 862100, 193315, 883030, 883287)
+WHERE fid IN (880094, 862100, 193315, 883030, 883287, 883713, 884297)
 ${timestampClause}
 ORDER BY timestamp DESC
 LIMIT 20;`
