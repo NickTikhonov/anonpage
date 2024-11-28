@@ -4,6 +4,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use server"
 
+import pg from 'pg'
+import { env } from '~/env';
+import { NeynarAPIClient } from "@neynar/nodejs-sdk";
+import { CastWithInteractions } from '@neynar/nodejs-sdk/build/neynar-api/v2';
+
+type DeletedCast = {
+  fid: number,
+  pfp_url: string,
+  text: string,
+  timestamp: Date,
+}
+
 async function getClient() {
   const pgClient = new pg.Client({
     connectionString: env.NEYNAR_DB_URL,
@@ -12,10 +24,6 @@ async function getClient() {
   await connectPromise
   return pgClient
 }
-
-import pg from 'pg'
-import { env } from '~/env';
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
 
 export async function anonFeed(from?: Date) {
   return await fetchRecentAnonCasts(from)
@@ -30,6 +38,27 @@ export async function fetchParentCast(hash: string) {
   return casts.result.casts[0]
 }
 
+async function fetchDeletedCasts(from?: Date) {
+  const pgClient = await getClient()
+
+  const timestampClause = from ? `AND timestamp < '${from.toISOString()}'` : '';
+
+  // Execute the query (example using node-postgres)
+  const result = await pgClient.query(
+    `
+SELECT fid, pfp_url, text, timestamp
+FROM "public"."deleted_casts"
+WHERE fid IN (880094, 862100, 193315, 883030, 883287)
+${timestampClause}
+ORDER BY timestamp DESC
+LIMIT 20;`
+  );
+
+  const deletedCasts = result.rows as DeletedCast[]
+  await pgClient.end()
+  return deletedCasts
+}
+
 async function fetchRecentAnonCasts(from?: Date) {
   const pgClient = await getClient()
   const neynar = new NeynarAPIClient(env.NEYNAR_API_KEY);
@@ -41,7 +70,7 @@ async function fetchRecentAnonCasts(from?: Date) {
     `
 SELECT '0x' || encode(hash, 'hex') as hash
 FROM "public"."casts"
-WHERE fid IN (880094, 862100, 193315)
+WHERE fid IN (880094, 862100, 193315, 883030, 883287)
 ${timestampClause}
 ORDER BY timestamp DESC
 LIMIT 20;`
